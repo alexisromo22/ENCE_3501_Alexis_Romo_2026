@@ -1,0 +1,88 @@
+*** SPICE deck for cell AccumulatorB{sch} from library VLSI_Final_Lab
+*** Created on Thu Mar 12, 2026 17:53:37
+*** Last revised on Mon Mar 16, 2026 14:35:53
+*** Written on Mon Mar 16, 2026 14:36:11 by Electric VLSI Design System, version 9.08
+*** Layout tech: mocmos, foundry MOSIS
+*** UC SPICE *** , MIN_RESIST 4.0, MIN_CAPAC 0.1FF
+
+*** SUBCIRCUIT muddLib07__flops_c_1x FROM CELL muddLib07:flops_c_1x{sch}
+.SUBCKT muddLib07__flops_c_1x d ph1 ph2 q setb
+** GLOBAL gnd
+** GLOBAL vdd
+Mnmos@2 masterb ph2buf masterinb gnd N L=0.6U W=1.8U
+Mnmos@3 master masterb gnd gnd N L=0.6U W=1.8U
+Mnmos@4 slave ph1buf master gnd N L=0.6U W=1.8U
+Mnmos@5 masterb ph2b n6 gnd N L=0.6U W=1.2U
+Mnmos@6 n6 master gnd gnd N L=0.6U W=1.2U
+Mnmos@7 n8 slaveb gnd gnd N L=0.6U W=1.2U
+Mnmos@8 slaveb slave gnd gnd N L=0.6U W=1.8U
+Mnmos@10 slave ph1b n8 gnd N L=0.6U W=1.2U
+Mnmos@11 q slaveb gnd gnd N L=0.6U W=2.1U
+Mnmos@17 masterinb setb gnd gnd N L=0.6U W=1.8U
+Mnmos@19 masterinb d gnd gnd N L=0.6U W=1.8U
+Mnmos@22 ph2b ph2 gnd gnd N L=0.6U W=1.8U
+Mnmos@25 ph2buf ph2b gnd gnd N L=0.6U W=1.8U
+Mnmos@26 ph1buf ph1b gnd gnd N L=0.6U W=1.8U
+Mnmos@27 ph1b ph1 gnd gnd N L=0.6U W=1.8U
+Mpmos@2 masterinb ph2b masterb vdd P L=0.6U W=1.8U
+Mpmos@3 vdd masterb master vdd P L=0.6U W=2.7U
+Mpmos@4 master ph1b slave vdd P L=0.6U W=1.8U
+Mpmos@5 n7 ph2buf masterb vdd P L=0.6U W=1.2U
+Mpmos@6 vdd master n7 vdd P L=0.6U W=1.2U
+Mpmos@7 vdd slaveb n9 vdd P L=0.6U W=1.2U
+Mpmos@8 vdd slave slaveb vdd P L=0.6U W=2.7U
+Mpmos@10 n9 ph1buf slave vdd P L=0.6U W=1.2U
+Mpmos@11 vdd slaveb q vdd P L=0.6U W=3U
+Mpmos@16 net@432 d masterinb vdd P L=0.6U W=3.6U
+Mpmos@18 vdd setb net@432 vdd P L=0.6U W=7.2U
+Mpmos@21 vdd ph1 ph1b vdd P L=0.6U W=2.7U
+Mpmos@22 vdd ph2 ph2b vdd P L=0.6U W=2.7U
+Mpmos@24 vdd ph1b ph1buf vdd P L=0.6U W=2.7U
+Mpmos@25 vdd ph2b ph2buf vdd P L=0.6U W=2.7U
+.ENDS muddLib07__flops_c_1x
+
+*** SUBCIRCUIT Final_Project__inv_1x FROM CELL Final_Project:inv_1x{sch}
+.SUBCKT Final_Project__inv_1x a y
+** GLOBAL gnd
+** GLOBAL vdd
+Mnmos@0 y a gnd gnd N_1u L=0.6U W=2.1U
+Mpmos@0 vdd a y vdd P_1u L=0.6U W=3U
+.ENDS Final_Project__inv_1x
+
+*** SUBCIRCUIT Final_Project__nand2_1x FROM CELL Final_Project:nand2_1x{sch}
+.SUBCKT Final_Project__nand2_1x a b y
+** GLOBAL gnd
+** GLOBAL vdd
+Mnmos@0 y b net@5 gnd N_1u L=0.6U W=3.6U
+Mnmos@1 net@5 a gnd gnd N_1u L=0.6U W=3.6U
+Mpmos@0 vdd b y vdd P_1u L=0.6U W=3.6U
+Mpmos@1 vdd a y vdd P_1u L=0.6U W=3.6U
+.ENDS Final_Project__nand2_1x
+
+.global gnd vdd
+
+*** TOP LEVEL CELL: AccumulatorB{sch}
+Xflops_c_@1 B0 net@38 net@38 AluB0 net@19 muddLib07__flops_c_1x
+Xflops_c_@2 B1 net@38 net@38 AluB1 net@19 muddLib07__flops_c_1x
+Xflops_c_@3 B2 net@38 net@38 AluB2 net@19 muddLib07__flops_c_1x
+Xflops_c_@4 B3 net@38 net@38 AluB3 net@19 muddLib07__flops_c_1x
+Xinv_1x@1 ClearB net@19 Final_Project__inv_1x
+Xnand2_1x@2 LatchB MainClock net@38 Final_Project__nand2_1x
+
+* Spice Code nodes in cell cell 'AccumulatorB{sch}'
+VDD vdd 0 DC 5
+VSS gnd 0 DC 0
+VCLK MainClock 0 PULSE(0 5 0ns 1ns 1ns 10ns 20ns)
+VLATCH LatchB 0 PULSE(0 5 5ns 1ns 1ns 40ns 80ns)
+VCLEAR ClearB 0 PULSE(5 0 0ns 1ns 1ns 20ns 200ns)
+VB0 B0 0 PULSE(0 5 10ns 1ns 1ns 40ns 80ns)
+VB1 B1 0 PULSE(0 5 20ns 1ns 1ns 60ns 120ns)
+VB2 B2 0 PULSE(0 5 30ns 1ns 1ns 80ns 160ns)
+VB3 B3 0 PULSE(0 5 40ns 1ns 1ns 100ns 200ns)
+.tran 1ns 200ns
+.model n NMOS LEVEL=1 VTO=0.7 KP=120u LAMBDA=0.02
+.model p PMOS LEVEL=1 VTO=-0.7 KP=50u LAMBDA=0.02
+.model n_1u NMOS LEVEL=1 VTO=0.7 KP=120u LAMBDA=0.02
+.model p_1u PMOS LEVEL=1 VTO=-0.7 KP=50u LAMBDA=0.02
+.end
+.END
